@@ -10,6 +10,8 @@ BuildRequires:  gcc
 Requires:       iproute
 Requires:       iputils
 Requires:       glibc-common
+Requires:       glibc
+Requires:       libgcc
 
 %global debug_package %{nil}
 %global _build_id_links none

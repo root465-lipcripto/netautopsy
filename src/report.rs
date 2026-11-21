@@ -181,13 +181,17 @@ fn millis(duration: Duration) -> u64 {
 }
 
 fn safe_text(input: &str) -> String {
-    input.chars().flat_map(|c| {
-        if c.is_control() || matches!(c, '\u{061c}' | '\u{200e}' | '\u{200f}' | '\u{202a}'..='\u{202e}' | '\u{2066}'..='\u{2069}') {
-            c.escape_default().collect::<Vec<_>>()
+    let mut output = String::with_capacity(input.len());
+    for c in input.chars() {
+        if c.is_control()
+            || matches!(c, '\u{061c}' | '\u{200e}' | '\u{200f}' | '\u{202a}'..='\u{202e}' | '\u{2066}'..='\u{2069}')
+        {
+            output.extend(c.escape_default());
         } else {
-            vec![c]
+            output.push(c);
         }
-    }).collect()
+    }
+    output
 }
 
 #[cfg(test)]

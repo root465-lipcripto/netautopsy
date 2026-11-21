@@ -60,6 +60,9 @@ fn run(mut args: impl Iterator<Item = String>) -> io::Result<()> {
             if args.next().is_some() {
                 return Err(invalid("inspect accepts exactly one file"));
             }
+            if !std::fs::metadata(&path)?.is_file() {
+                return Err(invalid("expected a regular report file"));
+            }
             let file = File::open(path)?;
             if !file.metadata()?.is_file() {
                 return Err(invalid("expected a regular report file"));

@@ -1,5 +1,6 @@
 """Exercise the built Linux CLI without depending on external connectivity."""
 import json
+import os
 import pathlib
 import stat
 import subprocess
@@ -23,7 +24,12 @@ run("diagnose", "--timeout-ms", "0", ok=False)
 run("diagnose", "--json", "--output", "unused.json", ok=False)
 
 with tempfile.TemporaryDirectory() as tmp:
-    path = pathlib.Path(tmp) / "capture.json"
+    directory = pathlib.Path(tmp)
+    run("inspect", str(directory), ok=False)
+    fifo = directory / "pipe"
+    os.mkfifo(fifo)
+    run("inspect", str(fifo), ok=False)
+    path = directory / "capture.json"
     args = ["diagnose", "--passive", "--target", "127.0.0.1"]
     result = run(*args, "--output", str(path))
     payload = path.read_bytes()
